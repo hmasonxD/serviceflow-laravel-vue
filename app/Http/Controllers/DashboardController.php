@@ -35,15 +35,18 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'metrics' => [
                 'customers' => Customer::query()->count(),
+
                 'openWorkOrders' => (clone $workOrders)
                     ->whereNotIn('status', [
                         WorkOrderStatus::Completed,
                         WorkOrderStatus::Cancelled,
                     ])
                     ->count(),
+
                 'scheduledWorkOrders' => (clone $workOrders)
                     ->where('status', WorkOrderStatus::Scheduled)
                     ->count(),
+
                 'urgentWorkOrders' => (clone $workOrders)
                     ->where('priority', WorkOrderPriority::Urgent)
                     ->whereNotIn('status', [
@@ -52,6 +55,29 @@ class DashboardController extends Controller
                     ])
                     ->count(),
             ],
+
+            'statusCounts' => [
+                'draft' => (clone $workOrders)
+                    ->where('status', WorkOrderStatus::Draft)
+                    ->count(),
+
+                'scheduled' => (clone $workOrders)
+                    ->where('status', WorkOrderStatus::Scheduled)
+                    ->count(),
+
+                'inProgress' => (clone $workOrders)
+                    ->where('status', WorkOrderStatus::InProgress)
+                    ->count(),
+
+                'completed' => (clone $workOrders)
+                    ->where('status', WorkOrderStatus::Completed)
+                    ->count(),
+
+                'cancelled' => (clone $workOrders)
+                    ->where('status', WorkOrderStatus::Cancelled)
+                    ->count(),
+            ],
+
             'recentWorkOrders' => $recentWorkOrders,
         ]);
     }

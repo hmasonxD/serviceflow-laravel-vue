@@ -61,7 +61,9 @@ function submitSearch(): void {
     <Head title="Customers" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6">
+        <div
+            class="mx-auto flex w-full max-w-[1500px] flex-1 flex-col gap-6 p-6"
+        >
             <div class="flex items-center justify-between gap-4">
                 <div>
                     <h1 class="text-2xl font-semibold">Customers</h1>
@@ -116,7 +118,7 @@ function submitSearch(): void {
                         <tr
                             v-for="customer in customers.data"
                             :key="customer.id"
-                            class="border-t"
+                            class="hover:bg-muted/40 border-t transition-colors"
                         >
                             <td class="px-4 py-3 font-medium">
                                 {{ customer.name }}
@@ -145,7 +147,7 @@ function submitSearch(): void {
                             <td class="px-4 py-3 text-right">
                                 <Link
                                     :href="`/customers/${customer.id}`"
-                                    class="font-medium underline"
+                                    class="font-medium hover:underline"
                                 >
                                     View
                                 </Link>

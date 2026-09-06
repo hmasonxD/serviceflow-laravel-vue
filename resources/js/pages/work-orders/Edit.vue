@@ -49,7 +49,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     <Head title="Edit Work Order" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6">
+        <div class="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-6">
             <div>
                 <Link
                     :href="`/work-orders/${workOrder.id}`"

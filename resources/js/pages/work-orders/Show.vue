@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
+import WorkOrderPriorityBadge from '@/components/work-orders/WorkOrderPriorityBadge.vue';
+import WorkOrderStatusBadge from '@/components/work-orders/WorkOrderStatusBadge.vue';
 import { index as workOrdersIndex } from '@/routes/work-orders';
 import type { BreadcrumbItem } from '@/types';
 
@@ -82,13 +84,6 @@ function transitionTo(status: string): void {
     });
 }
 
-function formatStatus(value: string): string {
-    return value
-        .split('_')
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(' ');
-}
-
 function formatDate(value: string | null): string {
     if (!value) {
         return '—';
@@ -102,7 +97,7 @@ function formatDate(value: string | null): string {
     <Head :title="workOrder.title" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6">
+        <div class="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-6">
             <div class="flex items-start justify-between gap-4">
                 <div>
                     <Link
@@ -124,25 +119,31 @@ function formatDate(value: string | null): string {
                 <Link
                     v-if="can.update"
                     :href="`/work-orders/${workOrder.id}/edit`"
-                    class="rounded-lg border px-4 py-2 text-sm"
+                    class="hover:bg-muted rounded-lg border px-4 py-2 text-sm transition-colors"
                 >
                     Edit
                 </Link>
             </div>
 
-            <div class="grid gap-6 rounded-xl border p-6 md:grid-cols-2">
+            <div
+                class="bg-card grid gap-6 rounded-xl border p-6 md:grid-cols-2"
+            >
                 <div>
                     <p class="text-muted-foreground text-sm">Status</p>
-                    <p class="font-medium">
-                        {{ formatStatus(workOrder.status) }}
-                    </p>
+
+                    <div class="mt-1">
+                        <WorkOrderStatusBadge :status="workOrder.status" />
+                    </div>
                 </div>
 
                 <div>
                     <p class="text-muted-foreground text-sm">Priority</p>
-                    <p class="capitalize">
-                        {{ workOrder.priority }}
-                    </p>
+
+                    <div class="mt-1">
+                        <WorkOrderPriorityBadge
+                            :priority="workOrder.priority"
+                        />
+                    </div>
                 </div>
 
                 <div>
@@ -161,6 +162,7 @@ function formatDate(value: string | null): string {
                     <p class="text-muted-foreground text-sm">
                         Assigned technician
                     </p>
+
                     <p>{{ workOrder.assignee?.name ?? 'Unassigned' }}</p>
                 </div>
 
@@ -196,11 +198,13 @@ function formatDate(value: string | null): string {
 
                 <div class="md:col-span-2">
                     <p class="text-muted-foreground text-sm">Total</p>
+
                     <p class="text-lg font-semibold">${{ workOrder.total }}</p>
                 </div>
 
                 <div class="md:col-span-2">
                     <p class="text-muted-foreground text-sm">Description</p>
+
                     <p class="whitespace-pre-line">
                         {{ workOrder.description ?? '—' }}
                     </p>
@@ -208,6 +212,7 @@ function formatDate(value: string | null): string {
 
                 <div class="md:col-span-2">
                     <p class="text-muted-foreground text-sm">Notes</p>
+
                     <p class="whitespace-pre-line">
                         {{ workOrder.notes ?? '—' }}
                     </p>
@@ -216,7 +221,7 @@ function formatDate(value: string | null): string {
 
             <div
                 v-if="can.transition && allowedTransitions.length > 0"
-                class="rounded-xl border p-6"
+                class="bg-card rounded-xl border p-6"
             >
                 <h2 class="text-lg font-semibold">Update status</h2>
 
@@ -230,7 +235,7 @@ function formatDate(value: string | null): string {
                         :key="transition.value"
                         type="button"
                         :disabled="transitionForm.processing"
-                        class="rounded-lg border px-4 py-2 text-sm disabled:opacity-50"
+                        class="hover:bg-muted rounded-lg border px-4 py-2 text-sm transition-colors disabled:opacity-50"
                         @click="transitionTo(transition.value)"
                     >
                         {{ transition.label }}
@@ -245,7 +250,7 @@ function formatDate(value: string | null): string {
                 </p>
             </div>
 
-            <div class="rounded-xl border p-6">
+            <div class="bg-card rounded-xl border p-6">
                 <div>
                     <h2 class="text-lg font-semibold">Activity history</h2>
 
