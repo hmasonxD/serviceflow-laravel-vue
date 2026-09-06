@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { index as customersIndex } from '@/routes/customers';
+import type { BreadcrumbItem } from '@/types';
 
-defineProps<{
+const props = defineProps<{
     customer: {
         id: number;
         name: string;
@@ -19,79 +22,98 @@ defineProps<{
         update: boolean;
     };
 }>();
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Customers',
+        href: customersIndex().url,
+    },
+    {
+        title: props.customer.name,
+        href: `/customers/${props.customer.id}`,
+    },
+];
 </script>
 
 <template>
     <Head :title="customer.name" />
 
-    <div class="mx-auto max-w-4xl space-y-6 p-6">
-        <div class="flex items-start justify-between">
-            <div>
-                <Link href="/customers" class="text-sm underline">
-                    ← Back to customers
+    <AppLayout :breadcrumbs="breadcrumbs">
+        <div class="flex h-full flex-1 flex-col gap-6 p-6">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <Link
+                        href="/customers"
+                        class="text-muted-foreground text-sm underline"
+                    >
+                        ← Back to customers
+                    </Link>
+
+                    <h1 class="mt-3 text-2xl font-semibold">
+                        {{ customer.name }}
+                    </h1>
+
+                    <p
+                        v-if="customer.company"
+                        class="text-muted-foreground text-sm"
+                    >
+                        {{ customer.company }}
+                    </p>
+                </div>
+
+                <Link
+                    v-if="can.update"
+                    :href="`/customers/${customer.id}/edit`"
+                    class="rounded-lg border px-4 py-2 text-sm"
+                >
+                    Edit
                 </Link>
-
-                <h1 class="mt-3 text-2xl font-semibold">
-                    {{ customer.name }}
-                </h1>
-
-                <p v-if="customer.company" class="text-gray-500">
-                    {{ customer.company }}
-                </p>
             </div>
 
-            <Link
-                v-if="can.update"
-                :href="`/customers/${customer.id}/edit`"
-                class="rounded-lg border px-4 py-2 text-sm"
-            >
-                Edit
-            </Link>
-        </div>
+            <div class="grid gap-6 rounded-xl border p-6 md:grid-cols-2">
+                <div>
+                    <p class="text-muted-foreground text-sm">Email</p>
+                    <p>{{ customer.email ?? '—' }}</p>
+                </div>
 
-        <div class="grid gap-6 rounded-lg border p-6 md:grid-cols-2">
-            <div>
-                <p class="text-sm text-gray-500">Email</p>
-                <p>{{ customer.email ?? '—' }}</p>
-            </div>
+                <div>
+                    <p class="text-muted-foreground text-sm">Phone</p>
+                    <p>{{ customer.phone ?? '—' }}</p>
+                </div>
 
-            <div>
-                <p class="text-sm text-gray-500">Phone</p>
-                <p>{{ customer.phone ?? '—' }}</p>
-            </div>
+                <div>
+                    <p class="text-muted-foreground text-sm">Address</p>
+                    <p>{{ customer.address_line_1 ?? '—' }}</p>
 
-            <div>
-                <p class="text-sm text-gray-500">Address</p>
-                <p>{{ customer.address_line_1 ?? '—' }}</p>
+                    <p v-if="customer.address_line_2">
+                        {{ customer.address_line_2 }}
+                    </p>
+                </div>
 
-                <p v-if="customer.address_line_2">
-                    {{ customer.address_line_2 }}
-                </p>
-            </div>
+                <div>
+                    <p class="text-muted-foreground text-sm">Location</p>
 
-            <div>
-                <p class="text-sm text-gray-500">Location</p>
+                    <p>
+                        {{ customer.city ?? '—' }}
 
-                <p>
-                    {{ customer.city ?? '—' }}
+                        <span v-if="customer.province">
+                            , {{ customer.province }}
+                        </span>
 
-                    <span v-if="customer.province">
-                        , {{ customer.province }}
-                    </span>
+                        <span v-if="customer.postal_code">
+                            {{ customer.postal_code }}
+                        </span>
+                    </p>
+                </div>
 
-                    <span v-if="customer.postal_code">
-                        {{ customer.postal_code }}
-                    </span>
-                </p>
-            </div>
+                <div class="md:col-span-2">
+                    <p class="text-muted-foreground text-sm">Notes</p>
 
-            <div class="md:col-span-2">
-                <p class="text-sm text-gray-500">Notes</p>
-
-                <p class="whitespace-pre-line">
-                    {{ customer.notes ?? '—' }}
-                </p>
+                    <p class="whitespace-pre-line">
+                        {{ customer.notes ?? '—' }}
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
+    </AppLayout>
 </template>

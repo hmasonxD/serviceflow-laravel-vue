@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid, Users } from '@lucide/vue';
-
+import { ClipboardList, LayoutGrid, Users } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -17,6 +16,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { index as customersIndex } from '@/routes/customers';
+import { index as workOrdersIndex } from '@/routes/work-orders';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -30,20 +30,14 @@ const mainNavItems: NavItem[] = [
         href: customersIndex(),
         icon: Users,
     },
+    {
+        title: 'Work Orders',
+        href: workOrdersIndex(),
+        icon: ClipboardList,
+    },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/hmasonxD/serviceflow-laravel-vue',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs',
-        icon: BookOpen,
-    },
-];
+const footerNavItems: NavItem[] = [];
 </script>
 
 <template>
