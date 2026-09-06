@@ -9,5 +9,7 @@ parameters:
         - config/
         - database/
         - routes/
+    parallel:
+        maximumNumberOfProcesses: 1
 
     level: 7

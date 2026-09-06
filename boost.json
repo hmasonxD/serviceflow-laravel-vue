@@ -1,9 +1,5 @@
 {
-    "agents": [
-        "claude_code",
-        "copilot",
-        "codex"
-    ],
+    "agents": ["claude_code", "copilot", "codex"],
     "cloud": false,
     "guidelines": true,
     "skills": [
