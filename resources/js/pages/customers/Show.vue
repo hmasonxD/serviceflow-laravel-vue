@@ -15,6 +15,9 @@ defineProps<{
         postal_code: string | null;
         notes: string | null;
     };
+    can: {
+        update: boolean;
+    };
 }>();
 </script>
 
@@ -38,6 +41,7 @@ defineProps<{
             </div>
 
             <Link
+                v-if="can.update"
                 :href="`/customers/${customer.id}/edit`"
                 class="rounded-lg border px-4 py-2 text-sm"
             >
@@ -59,6 +63,7 @@ defineProps<{
             <div>
                 <p class="text-sm text-gray-500">Address</p>
                 <p>{{ customer.address_line_1 ?? '—' }}</p>
+
                 <p v-if="customer.address_line_2">
                     {{ customer.address_line_2 }}
                 </p>
@@ -66,11 +71,14 @@ defineProps<{
 
             <div>
                 <p class="text-sm text-gray-500">Location</p>
+
                 <p>
                     {{ customer.city ?? '—' }}
+
                     <span v-if="customer.province">
                         , {{ customer.province }}
                     </span>
+
                     <span v-if="customer.postal_code">
                         {{ customer.postal_code }}
                     </span>
@@ -79,6 +87,7 @@ defineProps<{
 
             <div class="md:col-span-2">
                 <p class="text-sm text-gray-500">Notes</p>
+
                 <p class="whitespace-pre-line">
                     {{ customer.notes ?? '—' }}
                 </p>

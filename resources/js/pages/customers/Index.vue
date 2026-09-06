@@ -26,6 +26,9 @@ const props = defineProps<{
     filters: {
         search: string;
     };
+    can: {
+        create: boolean;
+    };
 }>();
 
 const search = ref(props.filters.search);
@@ -49,12 +52,14 @@ function submitSearch(): void {
         <div class="flex items-center justify-between">
             <div>
                 <h1 class="text-2xl font-semibold">Customers</h1>
+
                 <p class="text-sm text-gray-500">
                     Manage customer records and contact information.
                 </p>
             </div>
 
             <Link
+                v-if="can.create"
                 href="/customers/create"
                 class="rounded-lg bg-black px-4 py-2 text-sm text-white"
             >
@@ -97,21 +102,27 @@ function submitSearch(): void {
                         <td class="px-4 py-3 font-medium">
                             {{ customer.name }}
                         </td>
+
                         <td class="px-4 py-3">
                             {{ customer.company ?? '—' }}
                         </td>
+
                         <td class="px-4 py-3">
                             {{ customer.email ?? '—' }}
                         </td>
+
                         <td class="px-4 py-3">
                             {{ customer.phone ?? '—' }}
                         </td>
+
                         <td class="px-4 py-3">
                             {{ customer.city ?? '—' }}
+
                             <span v-if="customer.province">
                                 , {{ customer.province }}
                             </span>
                         </td>
+
                         <td class="px-4 py-3 text-right">
                             <Link
                                 :href="`/customers/${customer.id}`"

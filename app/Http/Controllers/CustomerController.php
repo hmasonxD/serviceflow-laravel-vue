@@ -26,7 +26,7 @@ class CustomerController extends Controller
                     $query->where('name', 'like', "%{$search}%")
                         ->orWhere('company', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%");
-                })
+                }),
             )
             ->latest()
             ->paginate(10)
@@ -36,6 +36,9 @@ class CustomerController extends Controller
             'customers' => $customers,
             'filters' => [
                 'search' => $search,
+            ],
+            'can' => [
+                'create' => Gate::allows('create', Customer::class),
             ],
         ]);
     }
@@ -66,6 +69,9 @@ class CustomerController extends Controller
 
         return Inertia::render('customers/Show', [
             'customer' => $customer,
+            'can' => [
+                'update' => Gate::allows('update', $customer),
+            ],
         ]);
     }
 
@@ -80,7 +86,7 @@ class CustomerController extends Controller
 
     public function update(
         UpdateCustomerRequest $request,
-        Customer $customer
+        Customer $customer,
     ): RedirectResponse {
         Gate::authorize('update', $customer);
 
