@@ -73,6 +73,9 @@ jobs:
             - name: Run migrations
               run: php artisan migrate --force
 
+            - name: Generate Wayfinder routes
+              run: php artisan wayfinder:generate
+
             - name: Run project checks
               run: composer run ci:check
 
