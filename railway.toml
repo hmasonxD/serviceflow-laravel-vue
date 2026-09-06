@@ -1,0 +1,5 @@
+[build]
+buildCommand = "npm ci && npm run build && composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction"
+
+[deploy]
+preDeployCommand = "chmod +x ./railway/init-app.sh && sh ./railway/init-app.sh"
