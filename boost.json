@@ -1,0 +1,18 @@
+{
+    "agents": [
+        "claude_code",
+        "copilot",
+        "codex"
+    ],
+    "cloud": false,
+    "guidelines": true,
+    "skills": [
+        "infer-conventions",
+        "fortify-development",
+        "laravel-best-practices",
+        "testing-best-practices",
+        "wayfinder-development",
+        "inertia-vue-development",
+        "tailwindcss-development"
+    ]
+}
