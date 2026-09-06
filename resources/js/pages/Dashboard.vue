@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import {
+    CalendarClock,
+    ClipboardList,
+    TriangleAlert,
+    Users,
+} from '@lucide/vue';
+
 import AppLayout from '@/layouts/AppLayout.vue';
+import WorkOrderPriorityBadge from '@/components/work-orders/WorkOrderPriorityBadge.vue';
+import WorkOrderStatusBadge from '@/components/work-orders/WorkOrderStatusBadge.vue';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
 
@@ -27,6 +36,15 @@ defineProps<{
         scheduledWorkOrders: number;
         urgentWorkOrders: number;
     };
+
+    statusCounts: {
+        draft: number;
+        scheduled: number;
+        inProgress: number;
+        completed: number;
+        cancelled: number;
+    };
+
     recentWorkOrders: WorkOrder[];
 }>();
 
@@ -36,141 +54,262 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: dashboard().url,
     },
 ];
-
-function formatStatus(value: string): string {
-    return value
-        .split('_')
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(' ');
-}
 </script>
 
 <template>
     <Head title="Dashboard" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6">
+        <div
+            class="mx-auto flex w-full max-w-[1500px] flex-1 flex-col gap-6 p-6"
+        >
             <div>
                 <h1 class="text-2xl font-semibold">Dashboard</h1>
 
                 <p class="text-muted-foreground text-sm">
-                    Overview of your ServiceFlow operations.
+                    Monitor customers, work orders, and service activity.
                 </p>
             </div>
 
-            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div class="rounded-xl border p-5">
-                    <p class="text-muted-foreground text-sm">Customers</p>
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div class="bg-card rounded-xl border p-5 shadow-sm">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-muted-foreground text-sm">
+                                Customers
+                            </p>
 
-                    <p class="mt-2 text-3xl font-semibold">
-                        {{ metrics.customers }}
-                    </p>
+                            <p
+                                class="mt-2 text-3xl font-semibold tracking-tight"
+                            >
+                                {{ metrics.customers }}
+                            </p>
+                        </div>
+
+                        <div
+                            class="bg-muted flex size-10 items-center justify-center rounded-lg"
+                        >
+                            <Users class="size-5" />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="rounded-xl border p-5">
-                    <p class="text-muted-foreground text-sm">
-                        Open work orders
-                    </p>
+                <div class="bg-card rounded-xl border p-5 shadow-sm">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-muted-foreground text-sm">
+                                Open work orders
+                            </p>
 
-                    <p class="mt-2 text-3xl font-semibold">
-                        {{ metrics.openWorkOrders }}
-                    </p>
+                            <p
+                                class="mt-2 text-3xl font-semibold tracking-tight"
+                            >
+                                {{ metrics.openWorkOrders }}
+                            </p>
+                        </div>
+
+                        <div
+                            class="bg-muted flex size-10 items-center justify-center rounded-lg"
+                        >
+                            <ClipboardList class="size-5" />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="rounded-xl border p-5">
-                    <p class="text-muted-foreground text-sm">Scheduled</p>
+                <div class="bg-card rounded-xl border p-5 shadow-sm">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-muted-foreground text-sm">
+                                Scheduled
+                            </p>
 
-                    <p class="mt-2 text-3xl font-semibold">
-                        {{ metrics.scheduledWorkOrders }}
-                    </p>
+                            <p
+                                class="mt-2 text-3xl font-semibold tracking-tight"
+                            >
+                                {{ metrics.scheduledWorkOrders }}
+                            </p>
+                        </div>
+
+                        <div
+                            class="bg-muted flex size-10 items-center justify-center rounded-lg"
+                        >
+                            <CalendarClock class="size-5" />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="rounded-xl border p-5">
-                    <p class="text-muted-foreground text-sm">Urgent</p>
+                <div class="bg-card rounded-xl border p-5 shadow-sm">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-muted-foreground text-sm">Urgent</p>
 
-                    <p class="mt-2 text-3xl font-semibold">
-                        {{ metrics.urgentWorkOrders }}
-                    </p>
+                            <p
+                                class="mt-2 text-3xl font-semibold tracking-tight"
+                            >
+                                {{ metrics.urgentWorkOrders }}
+                            </p>
+                        </div>
+
+                        <div
+                            class="bg-destructive/10 text-destructive flex size-10 items-center justify-center rounded-lg"
+                        >
+                            <TriangleAlert class="size-5" />
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="space-y-4">
-                <div class="flex items-center justify-between">
+            <div
+                class="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(280px,0.7fr)]"
+            >
+                <section class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-semibold">
+                                Recent work orders
+                            </h2>
+
+                            <p class="text-muted-foreground text-sm">
+                                Latest activity across ServiceFlow.
+                            </p>
+                        </div>
+
+                        <Link
+                            href="/work-orders"
+                            class="hover:bg-muted rounded-lg border px-3 py-2 text-sm font-medium transition-colors"
+                        >
+                            View all
+                        </Link>
+                    </div>
+
+                    <div class="bg-card overflow-hidden rounded-xl border">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-muted/50">
+                                <tr>
+                                    <th class="px-4 py-3">Work order</th>
+
+                                    <th class="px-4 py-3">Customer</th>
+
+                                    <th class="px-4 py-3">Technician</th>
+
+                                    <th class="px-4 py-3">Priority</th>
+
+                                    <th class="px-4 py-3">Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr
+                                    v-for="workOrder in recentWorkOrders"
+                                    :key="workOrder.id"
+                                    class="hover:bg-muted/40 border-t transition-colors"
+                                >
+                                    <td class="px-4 py-3">
+                                        <Link
+                                            :href="`/work-orders/${workOrder.id}`"
+                                            class="font-medium hover:underline"
+                                        >
+                                            {{ workOrder.title }}
+                                        </Link>
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        {{ workOrder.customer.name }}
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        {{
+                                            workOrder.assignee?.name ??
+                                            'Unassigned'
+                                        }}
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        <WorkOrderPriorityBadge
+                                            :priority="workOrder.priority"
+                                        />
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        <WorkOrderStatusBadge
+                                            :status="workOrder.status"
+                                        />
+                                    </td>
+                                </tr>
+
+                                <tr v-if="recentWorkOrders.length === 0">
+                                    <td
+                                        colspan="5"
+                                        class="text-muted-foreground px-4 py-10 text-center"
+                                    >
+                                        No work orders yet.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <aside class="bg-card rounded-xl border p-5">
                     <div>
-                        <h2 class="text-lg font-semibold">
-                            Recent work orders
-                        </h2>
+                        <h2 class="text-lg font-semibold">Work summary</h2>
 
                         <p class="text-muted-foreground text-sm">
-                            Latest activity across ServiceFlow.
+                            Current work-order distribution.
                         </p>
                     </div>
 
-                    <Link
-                        href="/work-orders"
-                        class="text-sm font-medium underline"
-                    >
-                        View all
-                    </Link>
-                </div>
+                    <div class="mt-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <WorkOrderStatusBadge status="draft" />
 
-                <div class="overflow-hidden rounded-xl border">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-muted/50">
-                            <tr>
-                                <th class="px-4 py-3">Work order</th>
-                                <th class="px-4 py-3">Customer</th>
-                                <th class="px-4 py-3">Technician</th>
-                                <th class="px-4 py-3">Priority</th>
-                                <th class="px-4 py-3">Status</th>
-                            </tr>
-                        </thead>
+                            <span class="font-semibold">
+                                {{ statusCounts.draft }}
+                            </span>
+                        </div>
 
-                        <tbody>
-                            <tr
-                                v-for="workOrder in recentWorkOrders"
-                                :key="workOrder.id"
-                                class="border-t"
-                            >
-                                <td class="px-4 py-3">
-                                    <Link
-                                        :href="`/work-orders/${workOrder.id}`"
-                                        class="font-medium underline"
-                                    >
-                                        {{ workOrder.title }}
-                                    </Link>
-                                </td>
+                        <div class="flex items-center justify-between">
+                            <WorkOrderStatusBadge status="scheduled" />
 
-                                <td class="px-4 py-3">
-                                    {{ workOrder.customer.name }}
-                                </td>
+                            <span class="font-semibold">
+                                {{ statusCounts.scheduled }}
+                            </span>
+                        </div>
 
-                                <td class="px-4 py-3">
-                                    {{
-                                        workOrder.assignee?.name ?? 'Unassigned'
-                                    }}
-                                </td>
+                        <div class="flex items-center justify-between">
+                            <WorkOrderStatusBadge status="in_progress" />
 
-                                <td class="px-4 py-3 capitalize">
-                                    {{ workOrder.priority }}
-                                </td>
+                            <span class="font-semibold">
+                                {{ statusCounts.inProgress }}
+                            </span>
+                        </div>
 
-                                <td class="px-4 py-3">
-                                    {{ formatStatus(workOrder.status) }}
-                                </td>
-                            </tr>
+                        <div class="flex items-center justify-between">
+                            <WorkOrderStatusBadge status="completed" />
 
-                            <tr v-if="recentWorkOrders.length === 0">
-                                <td
-                                    colspan="5"
-                                    class="text-muted-foreground px-4 py-10 text-center"
-                                >
-                                    No work orders yet.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                            <span class="font-semibold">
+                                {{ statusCounts.completed }}
+                            </span>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <WorkOrderStatusBadge status="cancelled" />
+
+                            <span class="font-semibold">
+                                {{ statusCounts.cancelled }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 border-t pt-5">
+                        <Link
+                            href="/work-orders"
+                            class="bg-primary text-primary-foreground flex w-full items-center justify-center rounded-lg px-4 py-2 text-sm font-medium"
+                        >
+                            Manage work orders
+                        </Link>
+                    </div>
+                </aside>
             </div>
         </div>
     </AppLayout>

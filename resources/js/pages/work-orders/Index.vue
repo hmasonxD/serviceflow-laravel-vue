@@ -2,6 +2,8 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import WorkOrderPriorityBadge from '@/components/work-orders/WorkOrderPriorityBadge.vue';
+import WorkOrderStatusBadge from '@/components/work-orders/WorkOrderStatusBadge.vue';
 import { index as workOrdersIndex } from '@/routes/work-orders';
 import type { BreadcrumbItem } from '@/types';
 
@@ -65,20 +67,15 @@ function submitFilters(): void {
         },
     );
 }
-
-function formatStatus(value: string): string {
-    return value
-        .split('_')
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(' ');
-}
 </script>
 
 <template>
     <Head title="Work Orders" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6">
+        <div
+            class="mx-auto flex w-full max-w-[1500px] flex-1 flex-col gap-6 p-6"
+        >
             <div class="flex items-center justify-between gap-4">
                 <div>
                     <h1 class="text-2xl font-semibold">Work Orders</h1>
@@ -122,13 +119,13 @@ function formatStatus(value: string): string {
 
                 <button
                     type="submit"
-                    class="rounded-lg border px-4 py-2 text-sm"
+                    class="hover:bg-muted rounded-lg border px-4 py-2 text-sm transition-colors"
                 >
                     Filter
                 </button>
             </form>
 
-            <div class="overflow-hidden rounded-xl border">
+            <div class="bg-card overflow-hidden rounded-xl border">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-muted/50">
                         <tr>
@@ -145,10 +142,15 @@ function formatStatus(value: string): string {
                         <tr
                             v-for="workOrder in workOrders.data"
                             :key="workOrder.id"
-                            class="border-t"
+                            class="hover:bg-muted/40 border-t transition-colors"
                         >
-                            <td class="px-4 py-3 font-medium">
-                                {{ workOrder.title }}
+                            <td class="px-4 py-3">
+                                <Link
+                                    :href="`/work-orders/${workOrder.id}`"
+                                    class="font-medium hover:underline"
+                                >
+                                    {{ workOrder.title }}
+                                </Link>
                             </td>
 
                             <td class="px-4 py-3">
@@ -159,18 +161,22 @@ function formatStatus(value: string): string {
                                 {{ workOrder.assignee?.name ?? 'Unassigned' }}
                             </td>
 
-                            <td class="px-4 py-3 capitalize">
-                                {{ workOrder.priority }}
+                            <td class="px-4 py-3">
+                                <WorkOrderPriorityBadge
+                                    :priority="workOrder.priority"
+                                />
                             </td>
 
                             <td class="px-4 py-3">
-                                {{ formatStatus(workOrder.status) }}
+                                <WorkOrderStatusBadge
+                                    :status="workOrder.status"
+                                />
                             </td>
 
                             <td class="px-4 py-3 text-right">
                                 <Link
                                     :href="`/work-orders/${workOrder.id}`"
-                                    class="font-medium underline"
+                                    class="font-medium hover:underline"
                                 >
                                     View
                                 </Link>

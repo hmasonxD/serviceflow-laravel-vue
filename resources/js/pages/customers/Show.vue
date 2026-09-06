@@ -39,7 +39,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     <Head :title="customer.name" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6">
+        <div class="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-6">
             <div class="flex items-start justify-between gap-4">
                 <div>
                     <Link
@@ -64,13 +64,15 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <Link
                     v-if="can.update"
                     :href="`/customers/${customer.id}/edit`"
-                    class="rounded-lg border px-4 py-2 text-sm"
+                    class="hover:bg-muted rounded-lg border px-4 py-2 text-sm transition-colors"
                 >
                     Edit
                 </Link>
             </div>
 
-            <div class="grid gap-6 rounded-xl border p-6 md:grid-cols-2">
+            <div
+                class="bg-card grid gap-6 rounded-xl border p-6 md:grid-cols-2"
+            >
                 <div>
                     <p class="text-muted-foreground text-sm">Email</p>
                     <p>{{ customer.email ?? '—' }}</p>
