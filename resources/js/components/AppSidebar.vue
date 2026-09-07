@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { ClipboardList, LayoutGrid, Users } from '@lucide/vue';
+
 import AppLogo from '@/components/AppLogo.vue';
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -36,16 +36,14 @@ const mainNavItems: NavItem[] = [
         icon: ClipboardList,
     },
 ];
-
-const footerNavItems: NavItem[] = [];
 </script>
 
 <template>
     <Sidebar collapsible="icon" variant="inset">
-        <SidebarHeader>
+        <SidebarHeader class="border-sidebar-border/60 border-b">
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" as-child>
+                    <SidebarMenuButton size="lg" as-child class="h-auto py-2">
                         <Link :href="dashboard()">
                             <AppLogo />
                         </Link>
@@ -54,12 +52,11 @@ const footerNavItems: NavItem[] = [];
             </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent>
+        <SidebarContent class="py-2">
             <NavMain :items="mainNavItems" />
         </SidebarContent>
 
-        <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
+        <SidebarFooter class="border-sidebar-border/60 border-t p-2">
             <NavUser />
         </SidebarFooter>
     </Sidebar>

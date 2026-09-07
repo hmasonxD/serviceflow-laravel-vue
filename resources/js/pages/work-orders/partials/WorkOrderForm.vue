@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { Form } from '@inertiajs/vue3';
+import { Form, Link } from '@inertiajs/vue3';
+import {
+    CalendarClock,
+    CircleDollarSign,
+    ClipboardList,
+    Save,
+    StickyNote,
+    UserRound,
+    Wrench,
+} from '@lucide/vue';
 
 type CustomerOption = {
     id: number;
@@ -41,184 +50,327 @@ defineProps<{
         class="space-y-6"
         v-slot="{ errors, processing }"
     >
-        <div class="grid gap-6 md:grid-cols-2">
-            <div>
-                <label class="mb-2 block text-sm font-medium"> Customer </label>
-
-                <select
-                    name="customer_id"
-                    :value="workOrder?.customer_id ?? ''"
-                    class="bg-background w-full rounded-lg border px-3 py-2"
+        <section class="bg-card overflow-hidden rounded-2xl border shadow-sm">
+            <div class="flex items-center gap-3 border-b px-6 py-5">
+                <div
+                    class="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-xl"
                 >
-                    <option value="">Select customer</option>
+                    <ClipboardList class="size-5" />
+                </div>
 
-                    <option
-                        v-for="customer in customers"
-                        :key="customer.id"
-                        :value="customer.id"
+                <div>
+                    <h2 class="font-semibold">Service details</h2>
+                    <p class="text-muted-foreground text-sm">
+                        Define the customer request and scope of work.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid gap-6 p-6 md:grid-cols-2">
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Customer
+                    </label>
+
+                    <div class="relative">
+                        <UserRound
+                            class="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
+                        />
+
+                        <select
+                            name="customer_id"
+                            :value="workOrder?.customer_id ?? ''"
+                            class="bg-background focus:border-primary/50 focus:ring-primary/20 w-full appearance-none rounded-xl border py-2.5 pr-4 pl-10 text-sm transition outline-none focus:ring-2"
+                        >
+                            <option value="">Select customer</option>
+
+                            <option
+                                v-for="customer in customers"
+                                :key="customer.id"
+                                :value="customer.id"
+                            >
+                                {{ customer.name }}
+                                <template v-if="customer.company">
+                                    - {{ customer.company }}
+                                </template>
+                            </option>
+                        </select>
+                    </div>
+
+                    <p
+                        v-if="errors.customer_id"
+                        class="text-destructive mt-1.5 text-sm"
                     >
-                        {{ customer.name }}
-                        <template v-if="customer.company">
-                            - {{ customer.company }}
-                        </template>
-                    </option>
-                </select>
+                        {{ errors.customer_id }}
+                    </p>
+                </div>
 
-                <p v-if="errors.customer_id" class="mt-1 text-sm text-red-600">
-                    {{ errors.customer_id }}
-                </p>
-            </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Assigned technician
+                    </label>
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Assigned technician
-                </label>
+                    <div class="relative">
+                        <Wrench
+                            class="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
+                        />
 
-                <select
-                    name="assigned_to"
-                    :value="workOrder?.assigned_to ?? ''"
-                    class="w-full rounded-lg border px-3 py-2"
-                >
-                    <option value="">Unassigned</option>
+                        <select
+                            name="assigned_to"
+                            :value="workOrder?.assigned_to ?? ''"
+                            class="bg-background focus:border-primary/50 focus:ring-primary/20 w-full appearance-none rounded-xl border py-2.5 pr-4 pl-10 text-sm transition outline-none focus:ring-2"
+                        >
+                            <option value="">Unassigned</option>
 
-                    <option
-                        v-for="technician in technicians"
-                        :key="technician.id"
-                        :value="technician.id"
+                            <option
+                                v-for="technician in technicians"
+                                :key="technician.id"
+                                :value="technician.id"
+                            >
+                                {{ technician.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <p
+                        v-if="errors.assigned_to"
+                        class="text-destructive mt-1.5 text-sm"
                     >
-                        {{ technician.name }}
-                    </option>
-                </select>
+                        {{ errors.assigned_to }}
+                    </p>
+                </div>
 
-                <p v-if="errors.assigned_to" class="mt-1 text-sm text-red-600">
-                    {{ errors.assigned_to }}
-                </p>
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-medium">
+                        Work order title
+                    </label>
+
+                    <input
+                        name="title"
+                        type="text"
+                        :value="workOrder?.title ?? ''"
+                        placeholder="e.g. Emergency boiler repair"
+                        class="bg-background focus:border-primary/50 focus:ring-primary/20 w-full rounded-xl border px-3 py-2.5 text-sm transition outline-none focus:ring-2"
+                    />
+
+                    <p
+                        v-if="errors.title"
+                        class="text-destructive mt-1.5 text-sm"
+                    >
+                        {{ errors.title }}
+                    </p>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-medium">
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        rows="5"
+                        :value="workOrder?.description ?? ''"
+                        placeholder="Describe the requested service work..."
+                        class="bg-background focus:border-primary/50 focus:ring-primary/20 w-full resize-y rounded-xl border px-3 py-3 text-sm leading-6 transition outline-none focus:ring-2"
+                    />
+
+                    <p
+                        v-if="errors.description"
+                        class="text-destructive mt-1.5 text-sm"
+                    >
+                        {{ errors.description }}
+                    </p>
+                </div>
             </div>
+        </section>
 
-            <div class="md:col-span-2">
-                <label class="mb-2 block text-sm font-medium"> Title </label>
-
-                <input
-                    name="title"
-                    type="text"
-                    :value="workOrder?.title ?? ''"
-                    class="w-full rounded-lg border px-3 py-2"
-                />
-
-                <p v-if="errors.title" class="mt-1 text-sm text-red-600">
-                    {{ errors.title }}
-                </p>
-            </div>
-
-            <div class="md:col-span-2">
-                <label class="mb-2 block text-sm font-medium">
-                    Description
-                </label>
-
-                <textarea
-                    name="description"
-                    rows="4"
-                    :value="workOrder?.description ?? ''"
-                    class="w-full rounded-lg border px-3 py-2"
-                />
-
-                <p v-if="errors.description" class="mt-1 text-sm text-red-600">
-                    {{ errors.description }}
-                </p>
-            </div>
-
-            <div>
-                <label class="mb-2 block text-sm font-medium"> Priority </label>
-
-                <select
-                    name="priority"
-                    :value="workOrder?.priority ?? 'normal'"
-                    class="w-full rounded-lg border px-3 py-2"
+        <section class="bg-card overflow-hidden rounded-2xl border shadow-sm">
+            <div class="flex items-center gap-3 border-b px-6 py-5">
+                <div
+                    class="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-xl"
                 >
-                    <option value="low">Low</option>
-                    <option value="normal">Normal</option>
-                    <option value="high">High</option>
-                    <option value="urgent">Urgent</option>
-                </select>
+                    <CalendarClock class="size-5" />
+                </div>
 
-                <p v-if="errors.priority" class="mt-1 text-sm text-red-600">
-                    {{ errors.priority }}
-                </p>
+                <div>
+                    <h2 class="font-semibold">Scheduling & priority</h2>
+                    <p class="text-muted-foreground text-sm">
+                        Set urgency and planned service timing.
+                    </p>
+                </div>
             </div>
 
-            <div>
-                <label class="mb-2 block text-sm font-medium">
-                    Scheduled at
-                </label>
+            <div class="grid gap-6 p-6 md:grid-cols-2">
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Priority
+                    </label>
 
-                <input
-                    name="scheduled_at"
-                    type="datetime-local"
-                    :value="workOrder?.scheduled_at ?? ''"
-                    class="w-full rounded-lg border px-3 py-2"
-                />
+                    <select
+                        name="priority"
+                        :value="workOrder?.priority ?? 'normal'"
+                        class="bg-background focus:border-primary/50 focus:ring-primary/20 w-full rounded-xl border px-3 py-2.5 text-sm transition outline-none focus:ring-2"
+                    >
+                        <option value="low">Low</option>
+                        <option value="normal">Normal</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
 
-                <p v-if="errors.scheduled_at" class="mt-1 text-sm text-red-600">
-                    {{ errors.scheduled_at }}
-                </p>
+                    <p
+                        v-if="errors.priority"
+                        class="text-destructive mt-1.5 text-sm"
+                    >
+                        {{ errors.priority }}
+                    </p>
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Scheduled at
+                    </label>
+
+                    <input
+                        name="scheduled_at"
+                        type="datetime-local"
+                        :value="workOrder?.scheduled_at ?? ''"
+                        class="bg-background focus:border-primary/50 focus:ring-primary/20 w-full rounded-xl border px-3 py-2.5 text-sm transition outline-none focus:ring-2"
+                    />
+
+                    <p
+                        v-if="errors.scheduled_at"
+                        class="text-destructive mt-1.5 text-sm"
+                    >
+                        {{ errors.scheduled_at }}
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-card overflow-hidden rounded-2xl border shadow-sm">
+            <div class="flex items-center gap-3 border-b px-6 py-5">
+                <div
+                    class="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-xl"
+                >
+                    <CircleDollarSign class="size-5" />
+                </div>
+
+                <div>
+                    <h2 class="font-semibold">Pricing</h2>
+                    <p class="text-muted-foreground text-sm">
+                        Record the estimated service amount and tax.
+                    </p>
+                </div>
             </div>
 
-            <div>
-                <label class="mb-2 block text-sm font-medium"> Subtotal </label>
+            <div class="grid gap-6 p-6 md:grid-cols-2">
+                <div>
+                    <label class="mb-2 block text-sm font-medium">
+                        Subtotal
+                    </label>
 
-                <input
-                    name="subtotal"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    :value="workOrder?.subtotal ?? 0"
-                    class="w-full rounded-lg border px-3 py-2"
-                />
+                    <div class="relative">
+                        <span
+                            class="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2 text-sm"
+                        >
+                            $
+                        </span>
 
-                <p v-if="errors.subtotal" class="mt-1 text-sm text-red-600">
-                    {{ errors.subtotal }}
-                </p>
+                        <input
+                            name="subtotal"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            :value="workOrder?.subtotal ?? 0"
+                            class="bg-background focus:border-primary/50 focus:ring-primary/20 w-full rounded-xl border py-2.5 pr-3 pl-7 text-sm transition outline-none focus:ring-2"
+                        />
+                    </div>
+
+                    <p
+                        v-if="errors.subtotal"
+                        class="text-destructive mt-1.5 text-sm"
+                    >
+                        {{ errors.subtotal }}
+                    </p>
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium"> Tax </label>
+
+                    <div class="relative">
+                        <span
+                            class="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2 text-sm"
+                        >
+                            $
+                        </span>
+
+                        <input
+                            name="tax"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            :value="workOrder?.tax ?? 0"
+                            class="bg-background focus:border-primary/50 focus:ring-primary/20 w-full rounded-xl border py-2.5 pr-3 pl-7 text-sm transition outline-none focus:ring-2"
+                        />
+                    </div>
+
+                    <p
+                        v-if="errors.tax"
+                        class="text-destructive mt-1.5 text-sm"
+                    >
+                        {{ errors.tax }}
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-card overflow-hidden rounded-2xl border shadow-sm">
+            <div class="flex items-center gap-3 border-b px-6 py-5">
+                <div
+                    class="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-xl"
+                >
+                    <StickyNote class="size-5" />
+                </div>
+
+                <div>
+                    <h2 class="font-semibold">Internal notes</h2>
+                    <p class="text-muted-foreground text-sm">
+                        Add context for technicians or future updates.
+                    </p>
+                </div>
             </div>
 
-            <div>
-                <label class="mb-2 block text-sm font-medium"> Tax </label>
-
-                <input
-                    name="tax"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    :value="workOrder?.tax ?? 0"
-                    class="w-full rounded-lg border px-3 py-2"
-                />
-
-                <p v-if="errors.tax" class="mt-1 text-sm text-red-600">
-                    {{ errors.tax }}
-                </p>
-            </div>
-
-            <div class="md:col-span-2">
-                <label class="mb-2 block text-sm font-medium"> Notes </label>
-
+            <div class="p-6">
                 <textarea
                     name="notes"
-                    rows="4"
+                    rows="5"
                     :value="workOrder?.notes ?? ''"
-                    class="w-full rounded-lg border px-3 py-2"
+                    placeholder="Add internal notes..."
+                    class="bg-background focus:border-primary/50 focus:ring-primary/20 w-full resize-y rounded-xl border px-3 py-3 text-sm leading-6 transition outline-none focus:ring-2"
                 />
 
-                <p v-if="errors.notes" class="mt-1 text-sm text-red-600">
+                <p v-if="errors.notes" class="text-destructive mt-1.5 text-sm">
                     {{ errors.notes }}
                 </p>
             </div>
-        </div>
+        </section>
 
-        <div class="flex justify-end">
+        <div
+            class="bg-card flex flex-col-reverse gap-3 rounded-2xl border p-4 shadow-sm sm:flex-row sm:items-center sm:justify-end"
+        >
+            <Link
+                href="/work-orders"
+                class="hover:bg-muted inline-flex items-center justify-center rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
+            >
+                Cancel
+            </Link>
+
             <button
                 type="submit"
                 :disabled="processing"
-                class="rounded-lg bg-black px-4 py-2 text-white disabled:opacity-50"
+                class="bg-primary text-primary-foreground inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
+                <Save class="size-4" />
                 {{ processing ? 'Saving...' : submitLabel }}
             </button>
         </div>
