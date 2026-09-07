@@ -24,8 +24,6 @@ The demo environment contains seeded customers, technicians, work orders, and ac
 
 ![ServiceFlow Dashboard](docs/screenshots/dashboard.png)
 
-`docs/screenshots/dashboard.png`
-
 The dashboard provides an operational overview of ServiceFlow, including:
 
 - customer count
@@ -54,8 +52,6 @@ Features include:
 
 ![Customer Management](docs/screenshots/customers.png)
 
-`docs/screenshots/customers.png`
-
 ### Work Order Management
 
 Work orders represent service jobs associated with customers.
@@ -74,8 +70,6 @@ Features include:
 - server-side pagination
 
 ![Work Orders](docs/screenshots/work-orders.png)
-
-`docs/screenshots/work-orders.png`
 
 ### Work Order Workflow
 
@@ -123,8 +117,6 @@ The activity history tracks:
 - timestamp
 
 ![Work Order Detail](docs/screenshots/work-order-detail.png)
-
-`docs/screenshots/work-order-detail.png`
 
 ## Role-Based Authorization
 
@@ -528,32 +520,6 @@ Features intentionally kept outside the MVP include:
 - AI features
 
 The goal was to build a focused application with strong engineering fundamentals rather than adding features without sufficient depth.
-
-## Screenshots
-
-### Dashboard
-
-![Dashboard](docs/screenshots/dashboard.png)
-
-`docs/screenshots/dashboard.png`
-
-### Customers
-
-![Customers](docs/screenshots/customers.png)
-
-`docs/screenshots/customers.png`
-
-### Work Orders
-
-![Work Orders](docs/screenshots/work-orders.png)
-
-`docs/screenshots/work-orders.png`
-
-### Work Order Workflow and Activity History
-
-![Work Order Detail](docs/screenshots/work-order-detail.png)
-
-`docs/screenshots/work-order-detail.png`
 
 ## Repository
 
