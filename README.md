@@ -1,15 +1,22 @@
 # ServiceFlow
 
+Production-style service operations platform built with Laravel 13, Vue 3, TypeScript, Inertia, and MySQL.
+
+[Live Demo](https://serviceflow-laravel-vue-production.up.railway.app) • [GitHub Repository](https://github.com/hmasonxD/serviceflow-laravel-vue)
+
+![PHP](https://img.shields.io/badge/PHP-8.4%2B-777BB4?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)
+![Vue](https://img.shields.io/badge/Vue-3-4FC08D?logo=vuedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white)
+![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?logo=githubactions&logoColor=white)
+![Deploy](https://img.shields.io/badge/Deploy-Railway-0B0D0E?logo=railway&logoColor=white)
+
 ServiceFlow is a full-stack service operations platform for managing customers, work orders, technician assignments, workflow status, pricing, and audit history.
 
-It was built as a production-style Laravel and Vue application with a focus on maintainable architecture, authorization, validation, testing, CI/CD, and deployment.
+It was built with a focus on maintainable architecture, backend authorization, validation, domain services, automated testing, static analysis, CI/CD, and production deployment.
 
-## Live Demo
-
-**Application:**  
-https://serviceflow-laravel-vue-production.up.railway.app
-
-### Demo Account
+## Demo Account
 
 ```text
 Email: admin@serviceflow.test
@@ -520,11 +527,6 @@ Features intentionally kept outside the MVP include:
 - AI features
 
 The goal was to build a focused application with strong engineering fundamentals rather than adding features without sufficient depth.
-
-## Repository
-
-GitHub:  
-https://github.com/hmasonxD/serviceflow-laravel-vue
 
 ## Author
 
